@@ -307,8 +307,21 @@ function isContainNumber(num, digit) {
  *  [2, 3, 9, 5] => 2       => 2 + 3 === 5 then balance element is 9 and its index = 2
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
-function getBalanceIndex(/* arr */) {
-  throw new Error('Not implemented');
+function getBalanceIndex(arr) {
+  if (!arr || arr.length === 0) return -1;
+  let totalSum = 0;
+  for (let i = 0; i < arr.length; i += 1) {
+    totalSum += arr[i];
+  }
+  let leftSum = 0;
+  for (let i = 0; i < arr.length; i += 1) {
+    totalSum -= arr[i];
+    if (leftSum === totalSum) {
+      return i;
+    }
+    leftSum += arr[i];
+  }
+  return -1;
 }
 
 /**
@@ -385,8 +398,56 @@ function rotateMatrix(matrix) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(arr) {
+  const arrN = arr;
+  if (!arrN || arrN.length <= 1) {
+    return arrN;
+  }
+  function swap(i, j) {
+    const temp = arrN[i];
+    arrN[i] = arrN[j];
+    arrN[j] = temp;
+  }
+  function partition(low, high) {
+    const mid = Math.floor((low + high) / 2);
+    if (arrN[low] > arrN[mid]) swap(low, mid);
+    if (arrN[mid] > arrN[high]) swap(mid, high);
+    if (arrN[low] > arrN[mid]) swap(low, mid);
+    const pivot = arr[mid];
+    swap(mid, high);
+    let i = low - 1;
+    for (let j = low; j < high; j += 1) {
+      if (arrN[j] <= pivot) {
+        i += 1;
+        if (i !== j) {
+          swap(i, j);
+        }
+      }
+    }
+    swap(i + 1, high);
+    return i + 1;
+  }
+  function quickSort(low, high) {
+    if (high - low <= 10) {
+      for (let i = low + 1; i <= high; i += 1) {
+        const key = arrN[i];
+        let j = i - 1;
+        while (j >= low && arrN[j] > key) {
+          arrN[j + 1] = arrN[j];
+          j -= 1;
+        }
+        arrN[j + 1] = key;
+      }
+      return;
+    }
+    if (low < high) {
+      const pi = partition(low, high);
+      quickSort(low, pi - 1);
+      quickSort(pi + 1, high);
+    }
+  }
+  quickSort(0, arrN.length - 1);
+  return arrN;
 }
 
 /**
@@ -406,8 +467,20 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  const lengths = str.length;
+  if (lengths <= 1 || iterations <= 0) return str;
+  let current = str;
+  for (let iter = 0; iter < iterations; iter += 1) {
+    let even = '';
+    let odd = '';
+    for (let i = 0; i < lengths; i += 1) {
+      if (i % 2 === 0) even += current.charAt(i);
+      else odd += current.charAt(i);
+    }
+    current = even + odd;
+  }
+  return current;
 }
 
 /**
